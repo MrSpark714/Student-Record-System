@@ -1,7 +1,8 @@
 #include<iostream>
 #include<string>
-#include<sstream>
 #include<iomanip>
+#include<sstream>
+#include"spark.hpp"
 // #include<fstream>
 using namespace std;
 static int StudentCount = 1;
@@ -36,37 +37,6 @@ class Student{
         double Get_t_marks(){
             return t_marks;
         }
-        float Percentage(){
-            float perc = marks / t_marks * 100;
-            percentage = perc;
-            return  perc;
-        }
-        string Grade_cal(){
-            if(percentage>=90){
-                grade = "A+";
-                return "A+";
-            } 
-            else if(percentage>=80){
-                grade = "A";
-                return "A";
-            }
-            else if(percentage>=70){
-                grade = "B";
-                return "B";	
-            }
-            else if(percentage>=60){
-                grade = "B";
-                return "C";
-            }
-            else if(percentage>=50){
-                grade = "D";
-                return "D";
-            }
-            else{
-                grade = "F";
-                return "F";			
-            }
-        }
         // Here Setter function 
         void Set_name(string name){
              this->name = name;
@@ -81,22 +51,10 @@ class Student{
             }
         }
         void Set_t_marks(double t_marks){
-            if(t_marks >= 0){
-                this->t_marks =t_marks;
-            }
-            else{
-                cout<<"Invalid Input! Try Again: ";
-                return;
-            }
+            this->t_marks = t_marks;
         }
         void Set_marks(double marks){
-            if(marks >= 0 || marks <= t_marks){
-                this->marks =marks;
-            }
-            else{
-                cout<<"Invalid Input! Try Again: ";
-                return;
-            }
+            this->marks = marks;
         }
         void Set_Section(char section){
             this->section = section;
@@ -107,12 +65,16 @@ class Student{
         void Set_department(string department){
             this->department = department;
         }
-        string generateStudendID(){
-            // StudentCount = 1;
-            ostringstream oss;
-            oss <<"STD" << 2024 << setw(5) <<setfill('0') << StudentCount++;
-            return oss.str();
+        void Set_grade(string grade){
+            this->grade = grade;
         }
+        void Set_Percentage(float percentage){
+            this->percentage = percentage;
+        }
+        // void Set_ID(){
+        //     string _id = generateStudentID(StudentCount);
+        //     this->Unique_ID = _id;
+        // }
         void DisplayInfo(){
             cout<<"\t*** Student Information ***\n";
             cout<<"Your Name: "<<name<<endl;
@@ -122,12 +84,14 @@ class Student{
             cout<<"Your Section: "<<section<<endl;
             cout<<"Your Age: "<<age<<endl;
             cout<<"Your Marks("<<t_marks<<"): "<<marks<<endl;
-            cout<<"Your Percentage: "<<setprecision(4)<<Percentage()<<"%"<<endl;
-            cout<<"Your Grade: "<<Grade_cal()<<endl;
+            cout<<"Your Percentage: "<<setprecision(4)<<percentage<<"%"<<endl;
+            cout<<"Your Grade: "<<grade<<endl;
+            cout<<"Your ID: "<<Unique_ID<<endl;
             cout<<"----------------------------------------------"<<endl;
         }
         Student(){ // defualt Constructor 
-            Unique_ID = generateStudendID();
+            // Unique_ID = generateStudendID(StudentCount);
+
         }
 };
 int main(){
@@ -135,12 +99,95 @@ int main(){
 }
 void Add_Student(){
     Student s = Student();
-    s.Set_name("Sohaib");
-    s.Set_age(20);
-    s.Set_rollno(18);
-    s.Set_department("Computer Science");
-    s.Set_Section('A');
-    s.Set_t_marks(700);
-    s.Set_marks(530);
+    cout<<"Enter Your Name: ";
+    while(1){ //    Input Name
+        string _name;
+        getline(cin,_name);
+        if(!(_name.length() == 0)){
+            s.Set_name(_name);
+            break;
+        }
+        else{
+            cout<<"Invalid Input! Try Again: ";
+        }
+    }
+    cout<<"Enter Your Age: ";
+    while(1){ //    Input Age
+        int _age;
+        cin>>_age;
+        if(!(_age <= 0)){
+            s.Set_age(_age);
+            break;
+        }
+        else{
+            cout<<"Invalid Input! Try Again: ";
+        }
+    }
+    cout<<"Enter Your Roll #: ";
+    while(1){ // Input roll Number
+        int _roll;
+        cin>>_roll;
+        if(!(_roll <= 0)){
+            s.Set_rollno(_roll);
+            break;
+        }
+        else{
+            cout<<"Invalid Input! Try Again: ";
+        }
+    }
+    cout<<"Enter Your Department: ";
+    while(1){ // Input Department
+        string dept;
+        cin.ignore();
+        getline(cin,dept);
+        if(!(dept.length() == 0)){
+            s.Set_department(dept);
+            break;
+        }
+        else{
+            cout<<"Invalid Input! try again: ";
+        }
+    }
+    cout<<"Enter Your Section: ";
+    while(1){ // Input Section
+        char _section;
+        cin>>_section;
+        if(!(_section == ' ')){
+            s.Set_Section(_section);
+            break;
+        }
+        else{
+            cout<<"Invalid Input! Try Again: ";
+        }
+    }
+    cout<<"Enter Your Total Marks: ";
+    float B_marks,T_marks;
+    while(1){
+        cin>>T_marks;
+        if(!(T_marks <=0 )){
+            s.Set_t_marks(T_marks);
+            break;
+        }
+        else{
+            cout<<"Invalid Input! Try Again: ";
+        }
+    }
+    cout<<"Enter Your Obtain Marks: ";
+    while(1){
+        cin>>B_marks;
+        if(!(B_marks <= 0 || B_marks >= T_marks)){
+            s.Set_marks(B_marks);
+            break;
+        }
+        else{
+            cout<<"Invalid Input! Try Again: ";
+        }
+    }
+    float perc = Percentage(B_marks,T_marks);
+    s.Set_Percentage(perc);
+    string Grade = Grade_Cal(perc);
+    s.Set_grade(Grade);
+    // s.Set_ID();
+    cout<<"\t *** Student Information Added Sucessfully ***\n";
     s.DisplayInfo();
 }
