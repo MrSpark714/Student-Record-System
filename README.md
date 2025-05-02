@@ -1,5 +1,5 @@
 # Student Record Management System in c++
-- Add Student Detail
+## Add Student Detail
     Name
     Roll Number
     Age
